@@ -102,6 +102,8 @@ python main.py
 Open your browser at: **http://localhost:8000**
 
 ---
+Google Drive archival functionality was implemented in `google_services.py`, but deployment-side activation requires Google Cloud service account credentials. Due to organization policy restrictions preventing service account key generation on the current Google account, this feature has been left optional in the deployed version. The core workflow (lead intake → enrichment → AI report generation → PDF generation → automated email delivery) is fully functional.
+
 
 ## 🔑 API Keys Setup (All FREE)
 
