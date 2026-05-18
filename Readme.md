@@ -179,6 +179,11 @@ For deployment, consider:
 - **Railway / Render** for hosting (free tiers available)
 - **gemini** for quick public URL during testing: `gemini http 8000`
 
+
+UI sample image 
+<img width="1840" height="895" alt="image" src="https://github.com/user-attachments/assets/f8562052-2f4c-46c5-a2fb-d023717b1a0a" />
+
+
 ---
 
 ## 📧 Contact
