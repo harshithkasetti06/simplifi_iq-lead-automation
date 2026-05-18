@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SimplifIQ — Lead Intake</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: #2a2a3a;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --accent3: #43e97b;
+      --text: #f0f0f8;
+      --muted: #8888aa;
+      --input-bg: #1a1a26;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(108,99,255,0.13) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(255,101,132,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 60% 30%, rgba(67,233,123,0.07) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 24px rgba(108,99,255,0.4);
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 40%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #c8c8ff 60%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.3);
+      color: #a89fff;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent3);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent3);
+      animation: pulse 2s infinite;
+    }
+
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: 600px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.03) inset,
+        0 32px 80px rgba(0,0,0,0.5),
+        0 0 60px rgba(108,99,255,0.06);
+      animation: fadeUp 0.9s ease both 0.2s;
+    }
+
+    .form-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #b0b0cc;
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .required {
+      color: var(--accent2);
+      margin-left: 2px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      padding: 14px 16px;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #444460;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      background: #1e1e2e;
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.5;
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    select option {
+      background: #1a1a26;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent) 0%, #9b59f5 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(108,99,255,0.35);
+      letter-spacing: 0.3px;
+      margin-top: 8px;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(108,99,255,0.5);
+    }
+
+    .btn-submit:hover::before { opacity: 1; }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    /* Status messages */
+    .status {
+      margin-top: 20px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      display: none;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .status.success {
+      background: rgba(67,233,123,0.1);
+      border: 1px solid rgba(67,233,123,0.3);
+      color: #43e97b;
+    }
+
+    .status.error {
+      background: rgba(255,101,132,0.1);
+      border: 1px solid rgba(255,101,132,0.3);
+      color: #ff6584;
+    }
+
+    .status.loading {
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.3);
+      color: #a89fff;
+    }
+
+    /* Steps indicator */
+    .steps {
+      display: flex;
+      gap: 8px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 100px;
+      border: 1px solid var(--border);
+    }
+
+    .step-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .step.active .step-dot { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
+    .step.active { color: var(--text); border-color: rgba(67,233,123,0.2); }
+
+    /* Footer */
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 12px;
+      color: #444460;
+      animation: fadeUp 1s ease both 0.4s;
+    }
+
+    .footer a { color: var(--muted); text-decoration: none; }
+    .footer a:hover { color: var(--accent); }
+
+    /* Animations */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    @media (max-width: 520px) {
+      .card { padding: 28px 20px; }
+      .row { grid-template-columns: 1fr; }
+      .steps { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <span class="logo-text">SimplifIQ</span>
+      </div>
+      <div class="badge">AI-Powered Lead Intelligence</div>
+      <h1>Get Your Free<br/>Company Audit Report</h1>
+      <p>Submit your details and receive a personalized AI-generated business intelligence report within minutes — completely free.</p>
+    </div>
+
+    <div class="card">
+      <form id="leadForm" novalidate>
+
+        <div class="form-section-label">Contact Information</div>
+
+        <div class="row">
+          <div class="form-group">
+            <label>First Name <span class="required">*</span></label>
+            <input type="text" name="first_name" placeholder="John" required />
+          </div>
+          <div class="form-group">
+            <label>Last Name <span class="required">*</span></label>
+            <input type="text" name="last_name" placeholder="Smith" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Work Email <span class="required">*</span></label>
+          <input type="email" name="email" placeholder="john@company.com" required />
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" placeholder="+1 (555) 000-0000" />
+        </div>
+
+        <div class="divider"></div>
+        <div class="form-section-label">Company Details</div>
+
+        <div class="form-group">
+          <label>Company Name <span class="required">*</span></label>
+          <input type="text" name="company_name" placeholder="Acme Corporation" required />
+        </div>
+
+        <div class="form-group">
+          <label>Company Website <span class="required">*</span></label>
+          <input type="url" name="website" placeholder="https://yourcompany.com" required />
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label>Industry <span class="required">*</span></label>
+            <select name="industry" required>
+              <option value="" disabled selected>Select industry</option>
+              <option>SaaS / Software</option>
+              <option>Finance & Banking</option>
+              <option>Consulting</option>
+              <option>E-Commerce</option>
+              <option>Healthcare</option>
+              <option>Real Estate</option>
+              <option>Marketing & Advertising</option>
+              <option>Manufacturing</option>
+              <option>Education</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Company Size</label>
+            <select name="company_size">
+              <option value="" disabled selected>Select size</option>
+              <option>1–10 employees</option>
+              <option>11–50 employees</option>
+              <option>51–200 employees</option>
+              <option>201–500 employees</option>
+              <option>500+ employees</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>What's your biggest business challenge?</label>
+          <textarea name="challenge" placeholder="e.g. We struggle with lead conversion, manual workflows, customer retention..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>How did you hear about us?</label>
+          <select name="source">
+            <option value="" disabled selected>Select source</option>
+            <option>Google Search</option>
+            <option>LinkedIn</option>
+            <option>Referral</option>
+            <option>Social Media</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <div class="btn-inner">
+            <div class="spinner" id="spinner"></div>
+            <span id="btnText">Generate My Free Audit Report ✦</span>
+          </div>
+        </button>
+
+        <div class="status" id="statusMsg"></div>
+
+      </form>
+
+      <div class="steps" id="stepsIndicator">
+        <div class="step active" id="step1"><div class="step-dot"></div>Form Submitted</div>
+        <div class="step" id="step2"><div class="step-dot"></div>Researching Company</div>
+        <div class="step" id="step3"><div class="step-dot"></div>Generating Report</div>
+        <div class="step" id="step4"><div class="step-dot"></div>Sending Email</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>🔒 Your data is secure and never shared. &nbsp;·&nbsp; <a href="#">Privacy Policy</a> &nbsp;·&nbsp; © 2026 SimplifIQ</p>
+    </div>
+
+  </div>
+
+  <script>
+    const form = document.getElementById('leadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+    const statusMsg = document.getElementById('statusMsg');
+
+    const steps = ['step1','step2','step3','step4'];
+    let currentStep = 0;
+
+    function setStep(n) {
+      steps.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.toggle('active', i <= n);
+      });
+    }
+
+    function showStatus(type, msg) {
+      statusMsg.className = `status ${type}`;
+      statusMsg.textContent = msg;
+      statusMsg.style.display = 'block';
+    }
+
+    function setLoading(loading) {
+      submitBtn.disabled = loading;
+      spinner.style.display = loading ? 'block' : 'none';
+      btnText.textContent = loading ? 'Processing...' : 'Generate My Free Audit Report ✦';
+    }
+
+    async function simulateSteps() {
+      const messages = [
+        { step: 1, msg: '🔍 Researching your company online...', type: 'loading' },
+        { step: 2, msg: '🤖 AI is generating your personalized report...', type: 'loading' },
+        { step: 3, msg: '📄 Creating your PDF audit document...', type: 'loading' },
+        { step: 4, msg: '📧 Sending report to your email...', type: 'loading' },
+      ];
+      for (let i = 0; i < messages.length; i++) {
+        await new Promise(r => setTimeout(r, 4000));
+        setStep(messages[i].step);
+        showStatus(messages[i].type, messages[i].msg);
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Basic validation
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(f => {
+        if (!f.value.trim()) { f.style.borderColor = '#ff6584'; valid = false; }
+        else { f.style.borderColor = ''; }
+      });
+      if (!valid) { showStatus('error', '⚠️ Please fill in all required fields.'); return; }
+
+      setLoading(true);
+      setStep(0);
+      showStatus('loading', '🚀 Submitting your information...');
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      const stepPromise = simulateSteps();
+
+      try {
+        const res = await fetch('http://127.0.0.1:8000/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        await stepPromise;
+
+        const result = await res.json();
+
+        if (res.ok) {
+          setStep(4);
+          showStatus('success', '🎉 Success! Your personalized audit report has been sent to your email. Check your inbox!');
+          form.reset();
+        } else {
+          showStatus('error', `❌ ${result.detail || 'Something went wrong. Please try again.'}`);
+        }
+      } catch (err) {
+        await stepPromise;
+        showStatus('error', '❌ Network error. Please check your connection and try again.');
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+</html>
