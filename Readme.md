@@ -70,8 +70,8 @@ pip install -r requirements.txt
 Create a `.env` file in the root directory:
 
 ```env
-# Groq AI (FREE) — https://console.groq.com
-GROQ_API_KEY=gsk_your_key_here
+# gemini AI (FREE) — https://console.groq.com
+Gemini_API_KEY=gsk_your_key_here
 
 # Gmail SMTP (FREE) — Use App Password
 GMAIL_ADDRESS=your@gmail.com
@@ -105,8 +105,8 @@ Open your browser at: **http://localhost:8000**
 
 ## 🔑 API Keys Setup (All FREE)
 
-### Groq API (AI — Replaces OpenAI)
-1. Visit https://console.groq.com
+### Gemini API (AI — Replaces OpenAI)
+1. https://aistudio.google.com/app
 2. Sign up → API Keys → Create Key
 3. Copy `gsk_...` key to `.env`
 
@@ -130,7 +130,7 @@ Open your browser at: **http://localhost:8000**
 | 1 | User submits the form with company details |
 | 2 | FastAPI validates and accepts the submission |
 | 3 | System scrapes the company website (homepage, about, services) |
-| 4 | Groq LLaMA 3 generates a personalized audit report |
+| 4 | Gemini generates a personalized audit report |
 | 5 | ReportLab creates a professional dark-themed PDF |
 | 6 | Gmail SMTP sends the PDF to the prospect |
 | 7 | Lead data is logged to Google Sheets |
@@ -154,7 +154,7 @@ Open your browser at: **http://localhost:8000**
 
 ## 📌 Assumptions & Tradeoffs
 
-- **Groq over OpenAI**: LLaMA 3 70B via Groq is free and generates high-quality reports
+- **Gemini over OpenAI**: LLaMA 3 70B via Groq is free and generates high-quality reports
 - **BeautifulSoup over Playwright**: Simpler, no browser required; works for most static sites
 - **Background tasks**: Email/PDF generation runs async so the form responds immediately
 - **Graceful fallbacks**: If scraping fails, the AI still generates a report from form data alone
@@ -165,7 +165,7 @@ Open your browser at: **http://localhost:8000**
 ## ⚠️ Known Limitations
 
 - Some websites block scraping (Cloudflare, JS-only sites)
-- Groq free tier has rate limits (14,400 req/day — sufficient for this use case)
+- Gemini free tier has rate limits (14,400 req/day — sufficient for this use case)
 - Gmail may flag emails as spam without a custom domain
 - PDF styling uses ReportLab which has limited CSS support
 
@@ -175,7 +175,7 @@ Open your browser at: **http://localhost:8000**
 
 For deployment, consider:
 - **Railway / Render** for hosting (free tiers available)
-- **Ngrok** for quick public URL during testing: `ngrok http 8000`
+- **gemini** for quick public URL during testing: `gemini http 8000`
 
 ---
 
