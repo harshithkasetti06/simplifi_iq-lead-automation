@@ -182,9 +182,7 @@ For deployment, consider:
 
 UI sample image 
 <img width="1840" height="895" alt="image" src="https://github.com/user-attachments/assets/f8562052-2f4c-46c5-a2fb-d023717b1a0a" />
-
 <img width="1873" height="902" alt="image" src="https://github.com/user-attachments/assets/b1d863b1-41de-4d2d-bc96-ba56d2e90391" />
-
 <img width="1878" height="566" alt="image" src="https://github.com/user-attachments/assets/8a8de540-f289-45aa-a973-5cb40285566e" />
 
 
